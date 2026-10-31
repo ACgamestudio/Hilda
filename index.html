@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulado Transpetro da Hilda | Ênfase 1</title>
+  <style>
+    :root {
+      --bg-body: #0d1117;
+      --bg-card: #161b22;
+      --bg-card-hover: #21262d;
+      --border-color: #30363d;
+      --text-main: #c9d1d9;
+      --text-heading: #f0f6fc;
+      --text-muted: #8b949e;
+      --petro-green: #008542;
+      --petro-yellow: #ffcc00;
+      --petro-green-hover: #006b35;
+      --tag-bg: #21262d;
+      --tag-border: #363b42;
+      
+      --success-bg: rgba(46, 160, 67, 0.15);
+      --success-border: #2ea043;
+      --success-text: #3fb950;
+      
+      --error-bg: rgba(248, 81, 73, 0.15);
+      --error-border: #f85149;
+      --error-text: #ff7b72;
+      
+      --shadow-header: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f4f6f8;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f0f3f6;
+      --border-color: #d0d7de;
+      --text-main: #24292f;
+      --text-heading: #0969da;
+      --text-muted: #57606a;
+      --petro-green: #008542;
+      --petro-yellow: #ffcc00;
+      --petro-green-hover: #006b35;
+      --tag-bg: #eaeef2;
+      --tag-border: #d0d7de;
+
+      --success-bg: #dafbe1;
+      --success-border: #1a7f37;
+      --success-text: #1a7f37;
+
+      --error-bg: #ffebe9;
+      --error-border: #cf222e;
+      --error-text: #cf222e;
+
+      --shadow-header: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .top-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-card-hover);
+    }
+
+    #startScreen {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-header);
+      margin-top: 10px;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .custom-logo {
+      width: 150px;
+      height: auto;
+    }
+
+    .app-title {
+      font-size: 1.8rem;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+
+    .candidate-card {
+      background: var(--tag-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px auto 26px auto;
+      max-width: 580px;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    .candidate-card h3 {
+      font-size: 1rem;
+      color: var(--petro-green);
+      margin-bottom: 8px;
+    }
+
+    .candidate-card p {
+      margin-bottom: 4px;
+    }
+
+    .btn-start {
+      background: var(--petro-green);
+      color: #ffffff;
+      border: none;
+      padding: 16px 44px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 133, 66, 0.4);
+      transition: transform 0.15s, background-color 0.15s;
+    }
+
+    .btn-start:hover {
+      background: var(--petro-green-hover);
+      transform: translateY(-2px);
+    }
+
+    header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+      box-shadow: var(--shadow-header);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .header-top h1 {
+      font-size: 1.15rem;
+      color: var(--text-heading);
+    }
+
+    .status-badge {
+      font-size: 0.85rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: var(--petro-green);
+      font-weight: 700;
+    }
+
+    .progress-bar-bg {
+      background: var(--tag-bg);
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-fill {
+      background: var(--petro-green);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .score-summary {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .question-title {
+      font-size: 1.05rem;
+      color: var(--text-heading);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .options-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--bg-card);
+      user-select: none;
+    }
+
+    .option-item:hover:not(.locked) {
+      background: var(--bg-card-hover);
+      border-color: var(--petro-green);
+    }
+
+    .option-item input[type="radio"] {
+      margin-right: 12px;
+      margin-top: 4px;
+      accent-color: var(--petro-green);
+    }
+
+    .option-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .option-item.correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+    }
+
+    .option-item.correct .option-text {
+      color: var(--success-text);
+      font-weight: 600;
+    }
+
+    .option-item.incorrect {
+      background: var(--error-bg) !important;
+      border-color: var(--error-border) !important;
+    }
+
+    .option-item.incorrect .option-text {
+      color: var(--error-text);
+    }
+
+    .feedback-box {
+      display: none;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 0.92rem;
+      border-left: 5px solid;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box.correct {
+      background: var(--success-bg);
+      border-left-color: var(--success-border);
+    }
+
+    .feedback-box.incorrect {
+      background: var(--error-bg);
+      border-left-color: var(--error-border);
+    }
+
+    .feedback-title {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .feedback-box.correct .feedback-title {
+      color: var(--success-text);
+    }
+
+    .feedback-box.incorrect .feedback-title {
+      color: var(--error-text);
+    }
+
+    .explanation-content {
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .actions-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      margin-bottom: 40px;
+    }
+
+    button.btn {
+      background: var(--petro-green);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button.btn:hover:not(:disabled) {
+      background: var(--petro-green-hover);
+    }
+
+    button.btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button.btn-secondary {
+      background: var(--tag-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    button.btn-secondary:hover:not(:disabled) {
+      background: var(--bg-card-hover);
+    }
+
+    #resultsBanner {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border-top: 5px solid var(--petro-green);
+    }
+
+    #resultsBanner.show {
+      display: block;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+<div class="container">
+  <div class="top-toolbar">
+    <button class="theme-toggle-btn" id="btnThemeToggle" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> Modo Claro
+    </button>
+  </div>
+
+  <!-- Tela Inicial da Hilda -->
+  <div id="startScreen">
+    <div class="logo-container">
+      <svg class="custom-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="35" y="25" width="130" height="24" fill="#ffcc00" />
+        <rect x="35" y="49" width="130" height="66" fill="#008542" />
+        <text x="100" y="103" fill="#ffffff" font-size="52" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-style="italic" text-anchor="middle" letter-spacing="-2">BR</text>
+        <text x="100" y="152" fill="#008542" font-size="24" font-family="'Arial Black', Impact, sans-serif" font-weight="900" font-style="italic" text-anchor="middle" letter-spacing="1">PETROBRAS</text>
+      </svg>
+    </div>
+
+    <h2 class="app-title">Simulado Transpetro da Hilda</h2>
+    
+    <div class="candidate-card">
+      <h3>Dados da Inscrição (Cesgranrio)</h3>
+      <p><strong>Candidata:</strong> Hilda</p>
+      <p><strong>Cargo:</strong> Ênfase 1: Administração e Controle</p>
+      <p><strong>Nível:</strong> Médio</p>
+      <p><strong>Polo de Prova:</strong> Nova Iguaçu/RJ</p>
+      <p><strong>Polo de Trabalho:</strong> Rio de Janeiro / RJ</p>
+    </div>
+
+    <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.95rem;">
+      O simulado contém conteúdos cobrados pela Cesgranrio para a <strong>Ênfase 1</strong>: Noções de Administração, Gestão de Materiais, Arquivologia, Rotinas de Controle e Atendimento.
+    </p>
+
+    <button class="btn-start" onclick="startNewSession()">Iniciar</button>
+  </div>
+
+  <!-- Tela do Simulado -->
+  <div id="quizScreen" style="display: none;">
+    <header>
+      <div class="header-top">
+        <h1>Simulado da Hilda | Ênfase 1: Administração e Controle</h1>
+        <span class="status-badge" id="counterBadge">0/6 Respondidas</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+      <div class="score-summary">
+        <span id="scoreText">Rodada em andamento</span>
+        <span id="timerText">Tempo: 00:00</span>
+      </div>
+    </header>
+
+    <div id="resultsBanner"></div>
+
+    <form id="quizForm">
+      <div id="questionsContainer"></div>
+      <div class="actions-footer">
+        <button type="button" class="btn btn-secondary" onclick="startNewSession()">Nova Rodada (Mais 6)</button>
+        <button type="button" class="btn" id="btnFinish" onclick="gradeQuiz()">Finalizar e Explicar Questões</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Banco de Questões Focado na Ênfase 1: Administração e Controle (Cesgranrio)
+  const questionPoolHilda = [
+    {
+      id: 1,
+      topic: "Noções de Administração Geral",
+      enunciado: "O processo administrativo é composto por quatro funções fundamentais: planejamento, organização, direção e controle. A função que tem como objetivo monitorar o desempenho organizacional, comparar os resultados alcançados com os padrões preestabelecidos e aplicar ações corretivas é denominada:",
+      options: [
+        "A) Planejamento.",
+        "B) Controle.",
+        "C) Organização.",
+        "D) Liderança.",
+        "E) Alocação."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "A função de <strong>Controle</strong> consiste em acompanhar e medir os resultados obtidos, confrontando-os com as metas e padrões planejados, adotando medidas corretivas quando necessário.<br><br><strong>Por que as outras estão erradas?</strong><br>• <em>Planejamento:</em> Define objetivos e estratégias.<br>• <em>Organização:</em> Distribui tarefas e recursos.<br>• <em>Liderança/Direção:</em> Orienta e motiva as pessoas na execução."
+    },
+    {
+      id: 2,
+      topic: "Gestão de Materiais e Estoques",
+      enunciado: "Na gestão de estoques de uma empresa pública, o método de classificação de materiais que organiza os itens de acordo com sua importância financeira e valor de consumo acumulado, agrupando-os nas classes A, B e C, tem como fundamento o princípio:",
+      options: [
+        "A) De Fayol.",
+        "B) Da Eficiência de Taylor.",
+        "C) De Pareto (Regra 80/20).",
+        "D) Da Teoria Burocrática de Weber.",
+        "E) Da Hierarquia de Maslow."
+      ],
+      correctIndex: 2,
+      detailedExplanation: "A <strong>Curva ABC</strong> baseia-se no <strong>Princípio de Pareto (80/20)</strong>, demonstrando que uma pequena quantidade de itens (classe A, cerca de 20%) representa a maior parcela do valor financeiro investido (cerca de 80%)."
+    },
+    {
+      id: 3,
+      topic: "Arquivologia e Gestão de Documentos",
+      enunciado: "De acordo com a teoria arquivística das 'Três Idades' dos documentos, aqueles documentos em curso ou frequentemente consultados pela organização, que permanecem sob a guarda direta dos setores de trabalho devido ao seu valor primário (administrativo e legal), pertencem à fase:",
+      options: [
+        "A) Permanente ou Histórica (Terceira Idade).",
+        "B) Intermediária (Segunda Idade).",
+        "C) Corrente ou Ativa (Primeira Idade).",
+        "D) Permanente ou Intermediária simultaneamente.",
+        "E) Descarte ou Eliminação Sumária."
+      ],
+      correctIndex: 2,
+      detailedExplanation: "O arquivo <strong>Corrente (ou de Primeira Idade)</strong> é constituído por documentos em tramitação e de consulta frequente, mantidos próximos aos usuários para suporte das atividades diárias.<br><br><strong>Por que as outras estão erradas?</strong><br>• <em>Intermediário:</em> Documentos de uso pouco frequente aguardando destinação final.<br>• <em>Permanente:</em> Documentos com valor histórico/cultural que nunca podem ser eliminados."
+    },
+    {
+      id: 4,
+      topic: "Atendimento e Comunicação Organizacional",
+      enunciado: "No atendimento ao público e comunicação interpessoal corporativa, a capacidade de o profissional colocar-se no lugar do interlocutor, compreendendo seus sentimentos, necessidades e pontos de vista sem julgamentos precipitados, é conhecida como:",
+      options: [
+        "A) Condescendência.",
+        "B) Procrastinação.",
+        "C) Empatia.",
+        "D) Assertividade impositiva.",
+        "E) Formalismo burocrático."
+      ],
+      correctIndex: 2,
+      detailedExplanation: "A <strong>Empatia</strong> é a competência interpessoal de se colocar na perspectiva do outro, sendo pilar indispensável para o atendimento de qualidade e mediação de conflitos."
+    },
+    {
+      id: 5,
+      topic: "Redação Oficial e Correspondência",
+      enunciado: "Conforme o Manual de Redação da Presidência da República, a comunicação oficial entre unidades administrativas do mesmo órgão governamental ou empresa pública, com objetivo de tratar de assuntos rotineiros e operacionais internos, era tradicionalmente denominada memorando e hoje integra o formato padronizado de:",
+      options: [
+        "A) Ofício.",
+        "B) Alvará.",
+        "C) Decreto Regulamentar.",
+        "D) Carta Pessoal.",
+        "E) Edital de Convocação."
+      ],
+      correctIndex: 0,
+      detailedExplanation: "A partir da 3ª edição do Manual de Redação da Presidência da República, as comunicações 'Aviso', 'Ofício' e 'Memorando' foram unificadas sob o padrão único de <strong>Ofício</strong>, preservando a clareza, impessoalidade e concisão."
+    },
+    {
+      id: 6,
+      topic: "Administração de Recursos Materiais",
+      enunciado: "No controle de estoques, o método de valoração em que se considera que as primeiras mercadorias que entram no almoxarifado devem ser as primeiras a sair (FIFO), refletindo custos de saída compatíveis com as entradas mais antigas, é conhecido pela sigla em português:",
+      options: [
+        "A) UEPS (Último a Entrar, Primeiro a Sair).",
+        "B) PEPS (Primeiro a Entrar, Primeiro a Sair).",
+        "C) Custo Médio Ponderado Móvel.",
+        "D) Just-in-Time.",
+        "E) Lote Econômico de Compras (LEC)."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "O método <strong>PEPS (Primeiro a Entrar, Primeiro a Sair)</strong> determina que os itens que entraram primeiro no estoque são os primeiros a serem consumidos ou faturados, muito utilizado para controle de validade e giro de almoxarifado."
+    },
+    {
+      id: 7,
+      topic: "Controle e Indicadores de Desempenho",
+      enunciado: "Na avaliação de processos de controle administrativo, a relação entre os resultados alcançados e os recursos financeiros, materiais e de tempo utilizados para atingir esses resultados é definida como:",
+      options: [
+        "A) Eficácia.",
+        "B) Eficiência.",
+        "C) Efetividade.",
+        "D) Elasticidade.",
+        "E) Resiliência."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "<strong>Eficiência</strong> relaciona os meios e recursos utilizados para alcançar determinado objetivo (fazer certo as coisas, com o menor custo ou tempo). A <em>Eficácia</em> foca no alcance do objetivo final em si, e a <em>Efetividade</em> avalia o impacto transformador real."
+    },
+    {
+      id: 8,
+      topic: "Ética e Sigilo Administrativo",
+      enunciado: "Durante o exercício de atividades de controle interno e suporte administrativo em empresas estatais, o dever de preservar a confidencialidade de informações estratégicas ou dados pessoais aos quais o colaborador tem acesso em razão do cargo é uma exigência ética que previne:",
+      options: [
+        "A) O princípio da legalidade estrita.",
+        "B) O quebramento de sigilo funcional e o conflito de interesses.",
+        "C) A transparência obrigatória de atos normativos.",
+        "D) A padronização de procedimentos operacionais.",
+        "E) O registro contábil de estoques."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "O sigilo funcional é dever básico do servidor/empregado público. A divulgação indevida de dados corporativos ou de terceiros constitui infração grave, quebra de sigilo funcional e violação do código de conduta ética."
+    },
+    {
+      id: 9,
+      topic: "Rotinas de Almoxarifado e Recebimento",
+      enunciado: "No processo de recebimento de materiais no almoxarifado, a etapa que consiste em conferir as quantidades entregues, confrontar a Nota Fiscal com o Pedido de Compra e verificar avarias visíveis nas embalagens chama-se:",
+      options: [
+        "A) Alienação de Ativos.",
+        "B) Conferência Quantitativa e Preliminar.",
+        "C) Inventário Rotativo Anual.",
+        "D) Amortização Contábil.",
+        "E) Tombamento Patrimonial Imediato."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "A <strong>Conferência Quantitativa e Preliminar</strong> confere volume, peso, integridade da embalagem e documentação fiscal antes do aceite definitivo e da inspeção técnica/qualitativa do material."
+    },
+    {
+      id: 10,
+      topic: "Gestão da Qualidade",
+      enunciado: "A ferramenta de controle e melhoria contínua de processos conhecida como Ciclo PDCA é composta pelas quatro etapas sequenciais:",
+      options: [
+        "A) Planejar, Executar, Controlar/Verificar e Agir (Plan, Do, Check, Act).",
+        "B) Produzir, Distribuir, Cobrar e Arquivar.",
+        "C) Padronizar, Delegar, Centralizar e Avaliar.",
+        "D) Prever, Dirigir, Checar e Autuar.",
+        "E) Priorizar, Definir, Computar e Auditar."
+      ],
+      correctIndex: 0,
+      detailedExplanation: "O <strong>Ciclo PDCA (Deming)</strong> é estruturado em: <strong>Plan</strong> (Planejar), <strong>Do</strong> (Executar/Fazer), <strong>Check</strong> (Verificar/Checar) e <strong>Act</strong> (Agir corretivamente)."
+    },
+    {
+      id: 11,
+      topic: "Arquivologia - Métodos de Arquivamento",
+      enunciado: "Quando uma instituição organiza seus prontuários e pastas funcionais ordenando-os rigorosamente pelo sobrenome e nome dos colaboradores (ex.: SILVA, Hilda), o método de arquivamento utilizado é classificado como:",
+      options: [
+        "A) Geográfico.",
+        "B) Numérico simples.",
+        "C) Alfabético.",
+        "D) Ideográfico temático.",
+        "E) Cronológico invertido."
+      ],
+      correctIndex: 2,
+      detailedExplanation: "O método <strong>Alfabético</strong> organiza os documentos pela sequência das letras dos nomes, obedecendo às regras universais de alfabetação (inversão com destaque para o último sobrenome)."
+    },
+    {
+      id: 12,
+      topic: "Atos e Processos Administrativos",
+      enunciado: "No âmbito da Administração Pública Indireta, o princípio constitucional que impõe que a atuação do agente público seja pautada pela honestidade, boa-fé e lealdade institucional, sem favorecimento nem perseguição pessoal, é o da:",
+      options: [
+        "A) Autonomia privada absoluta.",
+        "B) Impessoalidade e Moralidade.",
+        "C) Publicidade restrita a sócios.",
+        "D) Eficiência seletiva.",
+        "E) Soberania parlamentar."
+      ],
+      correctIndex: 1,
+      detailedExplanation: "Os princípios da <strong>Impessoalidade</strong> (tratar a todos sem favoritismos pessoais) e da <strong>Moralidade</strong> (agir com boa-fé, honestidade e ética) constam expressamente no artigo 37 da Constituição Federal (LIMPE)."
+    }
+  ];
+
+  let currentRound = [];
+  let seconds = 0;
+  let timerId = null;
+
+  function toggleTheme() {
+    const current = document.body.getAttribute("data-theme");
+    const next = current === "dark" ? "light" : "dark";
+    document.body.setAttribute("data-theme", next);
+
+    const btn = document.getElementById("btnThemeToggle");
+    btn.innerHTML = next === "light" 
+      ? `<span id="themeIcon">🌙</span> Modo Escuro` 
+      : `<span id="themeIcon">☀️</span> Modo Claro`;
+  }
+
+  function getRandomSix(pool) {
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 6);
+  }
+
+  function startNewSession() {
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("quizScreen").style.display = "block";
+    document.getElementById("resultsBanner").className = "";
+    document.getElementById("resultsBanner").innerHTML = "";
+    document.getElementById("btnFinish").disabled = false;
+    document.getElementById("scoreText").innerText = "Rodada em andamento";
+
+    currentRound = getRandomSix(questionPoolHilda);
+    renderCards(currentRound);
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderCards(questions) {
+    const container = document.getElementById("questionsContainer");
+    container.innerHTML = "";
+
+    questions.forEach((q, qIndex) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      card.id = `card-${q.id}`;
+
+      card.innerHTML = `
+        <div class="card-meta">
+          <span class="tag">Questão ${qIndex + 1} de 6</span>
+          <span class="tag">${q.topic}</span>
+        </div>
+        <div class="question-title">${q.enunciado}</div>
+        <ul class="options-list">
+          ${q.options.map((opt, oIndex) => `
+            <li class="option-item" onclick="chooseOption(${q.id}, ${oIndex})" id="opt-${q.id}-${oIndex}">
+              <input type="radio" name="question-${q.id}" value="${oIndex}" id="radio-${q.id}-${oIndex}">
+              <label class="option-text" for="radio-${q.id}-${oIndex}">${opt}</label>
+            </li>
+          `).join('')}
+        </ul>
+        <div class="feedback-box" id="feedback-${q.id}"></div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    startTimer();
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    seconds = 0;
+    timerId = setInterval(() => {
+      seconds++;
+      const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const sec = String(seconds % 60).padStart(2, '0');
+      document.getElementById("timerText").innerText = `Tempo: ${min}:${sec}`;
+    }, 1000);
+  }
+
+  function chooseOption(qId, oIndex) {
+    const radio = document.getElementById(`radio-${qId}-${oIndex}`);
+    if (radio && !radio.disabled) {
+      radio.checked = true;
+      updateProgress();
+    }
+  }
+
+  function updateProgress() {
+    let answered = 0;
+    currentRound.forEach(q => {
+      const checked = document.querySelector(`input[name="question-${q.id}"]:checked`);
+      if (checked) answered++;
+    });
+
+    const percent = Math.round((answered / currentRound.length) * 100);
+    document.getElementById("progressBar").style.width = `${percent}%`;
+    document.getElementById("counterBadge").innerText = `${answered}/${currentRound.length} Respondidas`;
+  }
+
+  function gradeQuiz() {
+    let correctCount = 0;
+    clearInterval(timerId);
+
+    currentRound.forEach(q => {
+      const selected = document.querySelector(`input[name="question-${q.id}"]:checked`);
+      const feedback = document.getElementById(`feedback-${q.id}`);
+      const correctElem = document.getElementById(`opt-${q.id}-${q.correctIndex}`);
+
+      const radios = document.querySelectorAll(`input[name="question-${q.id}"]`);
+      radios.forEach(r => r.disabled = true);
+      const items = document.querySelectorAll(`#card-${q.id} .option-item`);
+      items.forEach(it => it.classList.add("locked"));
+
+      correctElem.classList.add("correct");
+
+      if (selected) {
+        const userChoice = parseInt(selected.value, 10);
+        if (userChoice === q.correctIndex) {
+          correctCount++;
+          feedback.className = "feedback-box correct show";
+          feedback.innerHTML = `
+            <div class="feedback-title">✓ Resposta Correta!</div>
+            <div class="explanation-content">${q.detailedExplanation}</div>
+          `;
+        } else {
+          const wrongElem = document.getElementById(`opt-${q.id}-${userChoice}`);
+          wrongElem.classList.add("incorrect");
+          feedback.className = "feedback-box incorrect show";
+          feedback.innerHTML = `
+            <div class="feedback-title">✗ Resposta Incorreta (Marcou Opção ${String.fromCharCode(65 + userChoice)})</div>
+            <div class="explanation-content"><strong>Gabarito Oficial: Opção ${String.fromCharCode(65 + q.correctIndex)}</strong><br><br>${q.detailedExplanation}</div>
+          `;
+        }
+      } else {
+        feedback.className = "feedback-box incorrect show";
+        feedback.innerHTML = `
+          <div class="feedback-title">! Questão Não Respondida</div>
+          <div class="explanation-content"><strong>Gabarito Oficial: Opção ${String.fromCharCode(65 + q.correctIndex)}</strong><br><br>${q.detailedExplanation}</div>
+        `;
+      }
+    });
+
+    const percentScore = Math.round((correctCount / currentRound.length) * 100);
+    document.getElementById("scoreText").innerText = `Acertos: ${correctCount}/${currentRound.length} (${percentScore}%)`;
+
+    const banner = document.getElementById("resultsBanner");
+    banner.className = "show";
+    banner.innerHTML = `
+      <h2 style="color: var(--text-heading); margin-bottom: 8px;">Resultado do Simulado da Hilda</h2>
+      <p style="margin-bottom: 8px;">Você acertou <strong>${correctCount}</strong> de <strong>${currentRound.length}</strong> questões (<strong>${percentScore}%</strong> de aproveitamento).</p>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Todas as questões com erros ou deixadas em branco foram comentadas abaixo com o embasamento da banca Cesgranrio. Para realizar mais 6 questões aleatórias, clique em <strong>"Nova Rodada (Mais 6)"</strong>.</p>
+    `;
+
+    document.getElementById("btnFinish").disabled = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
